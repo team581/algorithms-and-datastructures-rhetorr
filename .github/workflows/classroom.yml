@@ -1,0 +1,80 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Get value at index
+      id: get-value-at-index
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Get value at index
+        setup-command: ''
+        command: "./gradlew test --tests assignment.AppTest.testGet"
+        timeout: 1
+        max-score: 1
+    - name: Set value at index
+      id: set-value-at-index
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Set value at index
+        setup-command: ''
+        command: "./gradlew test --tests assignment.AppTest.testSet"
+        timeout: 1
+        max-score: 1
+    - name: Remove value at index
+      id: remove-value-at-index
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Remove value at index
+        setup-command: ''
+        command: "./gradlew test --tests assignment.AppTest.testRemove"
+        timeout: 1
+        max-score: 1
+    - name: Reverse LinkedList
+      id: reverse-linkedlist
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Reverse LinkedList
+        setup-command: ''
+        command: "./gradlew test --tests assignment.AppTest.testReverse"
+        timeout: 1
+        max-score: 1
+    - name: Return whether LinkedList is sorted (true case)
+      id: return-whether-linkedlist-is-sorted-true-case
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Return whether LinkedList is sorted (true case)
+        setup-command: ''
+        command: "./gradlew test --tests assignment.AppTest.testIsSortedAscending"
+        timeout: 1
+        max-score: 1
+    - name: Return whether LinkedList is sorted (false case)
+      id: return-whether-linkedlist-is-sorted-false-case
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Return whether LinkedList is sorted (false case)
+        setup-command: ''
+        command: "./gradlew test --tests assignment.AppTest.testIsSortedAscending2"
+        timeout: 1
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        GET-VALUE-AT-INDEX_RESULTS: "${{steps.get-value-at-index.outputs.result}}"
+        SET-VALUE-AT-INDEX_RESULTS: "${{steps.set-value-at-index.outputs.result}}"
+        REMOVE-VALUE-AT-INDEX_RESULTS: "${{steps.remove-value-at-index.outputs.result}}"
+        REVERSE-LINKEDLIST_RESULTS: "${{steps.reverse-linkedlist.outputs.result}}"
+        RETURN-WHETHER-LINKEDLIST-IS-SORTED-TRUE-CASE_RESULTS: "${{steps.return-whether-linkedlist-is-sorted-true-case.outputs.result}}"
+        RETURN-WHETHER-LINKEDLIST-IS-SORTED-FALSE-CASE_RESULTS: "${{steps.return-whether-linkedlist-is-sorted-false-case.outputs.result}}"
+      with:
+        runners: get-value-at-index,set-value-at-index,remove-value-at-index,reverse-linkedlist,return-whether-linkedlist-is-sorted-true-case,return-whether-linkedlist-is-sorted-false-case
